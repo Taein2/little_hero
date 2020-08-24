@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "17640643589",
+    "firebase_url": "https://little-hero-b0df4.firebaseio.com",
+    "project_id": "little-hero-b0df4",
+    "storage_bucket": "little-hero-b0df4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17640643589:android:a1333efac732f8a87fd06c",
+        "android_client_info": {
+          "package_name": "taein.little_hero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17640643589-7qck86ae6t9tpvcg3cpddkc71pc7sl9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAybMBU5Gpg_pI2pLMCrolCBik00myYRmM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17640643589-7qck86ae6t9tpvcg3cpddkc71pc7sl9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
