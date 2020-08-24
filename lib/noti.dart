@@ -296,7 +296,6 @@ class _noti extends State<noti> {
                 ),
               ),
               Container(
-
                 child: Column(
                   children: <Widget>[
                     Row(
@@ -304,37 +303,47 @@ class _noti extends State<noti> {
                       children: <Widget>[
                         Column(
                           children: <Widget>[
-                            new DropdownButton(
-                              value: _selectedValue1,
-                              items: _dropItem.map((item) {
-                                return new DropdownMenuItem<String>(
-                                  value: item.city,
-                                  child: new Text(
-                                    item.city,
-                                    style: TextStyle(color: Colors.black,
-                                        fontSize: 17),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _selectedValue1 = newValue;
-                                  _dropItem2_1.clear();
-                                  for (int i = 0; i < _dropItem2.length; i++) {
-                                    if (_selectedValue1 == _dropItem2[i].city) {
-                                      _dropItem2_1.add(_dropItem2[i]);
-                                      _selectedValue2 = _dropItem2_1[0].gu;
+                            Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: new DropdownButton(
+                                value: _selectedValue1,
+                                items: _dropItem.map((item) {
+                                  return new DropdownMenuItem<String>(
+                                    value: item.city,
+                                    child: new Text(
+                                      item.city,
+                                      style: TextStyle(color: Colors.black,
+                                          fontSize: 17),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _selectedValue1 = newValue;
+                                    _dropItem2_1.clear();
+                                    for (int i = 0; i < _dropItem2.length; i++) {
+                                      if (_selectedValue1 == _dropItem2[i].city) {
+                                        _dropItem2_1.add(_dropItem2[i]);
+                                        _selectedValue2 = _dropItem2_1[0].gu;
+                                      }
                                     }
-                                  }
-                                });
-                              },
+                                  });
+                                },
+                              ),
                             ),
                           ],
                         ),
-                        Container(
-                          child: Column(
+                        Column(
                             children: <Widget>[
-                              DropdownButton(
+                          Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
+                              child: new DropdownButton(
                                 value: _selectedValue2,
                                 items: _dropItem2_1.map((item) {
                                   return new DropdownMenuItem<String>(
@@ -351,48 +360,60 @@ class _noti extends State<noti> {
                                   });
                                 },
                               ),
-                            ],
                           ),
+                          ],
                         ),
                         Column(
                           children: <Widget>[
-                            DropdownButton(
-                              value: _selectedValue3,
-                              items: _dropItem3.map((item) {
-                                return new DropdownMenuItem<String>(
-                                  value: item.li,
-                                  child: Text(item.li,
-                                    style: TextStyle(color: Colors.black,
-                                        fontSize: 17),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _selectedValue3 = newValue;
-                                });
-                              },
+                            Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: DropdownButton(
+                                value: _selectedValue3,
+                                items: _dropItem3.map((item) {
+                                  return new DropdownMenuItem<String>(
+                                    value: item.li,
+                                    child: Text(item.li,
+                                      style: TextStyle(color: Colors.black,
+                                          fontSize: 17),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _selectedValue3 = newValue;
+                                  });
+                                },
+                              ),
                             ),
                           ],
                         ),
                         Column(
                           children: <Widget>[
-                            DropdownButton(
-                              value: _selectedValue4,
-                              items: _dropItem4.map((item) {
-                                return DropdownMenuItem(
-                                  value: item.li,
-                                  child: Text(item.li,
-                                    style: TextStyle(color: Colors.black,
-                                        fontSize: 17),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedValue4 = value;
-                                });
-                              },
+                            Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: DropdownButton(
+                                value: _selectedValue4,
+                                items: _dropItem4.map((item) {
+                                  return DropdownMenuItem(
+                                    value: item.li,
+                                    child: Text(item.li,
+                                      style: TextStyle(color: Colors.black,
+                                          fontSize: 17),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedValue4 = value;
+                                  });
+                                },
+                              ),
                             ),
                           ],
                         ),
