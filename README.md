@@ -1,16 +1,21 @@
 # little_hero
 
-A new Flutter application.
+A new Flutter application for volunteers.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+1. Init Timer Page  
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+2. Main Page GridView  
+해야할일 : 다른 ROUTES 연결 문제
+ 
+3. Anouncment  
+해야할일 : 무한 스크롤 X -> SWIPER?
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+4. Detail  
+해야할일 : favorite(sqflite) and like(post type)연동  
+해야할일 : 날짜 비교해서 D-day 모집중(그린), 모집완료(레드) 표시    -> 시간 나면?    
+
+5. Favorite Page  
+해야함
