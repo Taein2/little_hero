@@ -39,7 +39,7 @@ class _Routes extends State<routes> {
 
   void initState(){
     super.initState();
-    Timer(Duration(seconds: 3), () => Navigator.of(context).pushReplacementNamed('/gridMain'));
+    Timer(Duration(seconds: 1), () => Navigator.of(context).pushReplacementNamed('/gridMain'));
   }
 
   Widget build(BuildContext context) {

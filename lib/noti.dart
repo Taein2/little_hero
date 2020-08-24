@@ -401,14 +401,22 @@ class _noti extends State<noti> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        SizedBox(
-                          width: _screenSize.width * 0.7,
+                        Container(
+                          width: _screenSize.width * 0.8,
+                          height: _screenSize.height * 0.05,
+                          decoration: new BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Colors.white,
+                          ),
                           child: TextFormField(
                             decoration: new InputDecoration.collapsed(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              )
                             ),
                             controller: _searchData_T,
                             style: TextStyle(
-                              color:Colors.white,
+                              color:Colors.black,
                               fontSize: 18
                             ),
                           ),
