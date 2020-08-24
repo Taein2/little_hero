@@ -5,7 +5,7 @@ A new Flutter application for volunteers.
 ## Getting Started
 
 
-1. basic timer page  
+1. Init Timer Page  
 
 2. Main Page GridView  
 해야할일 : 다른 ROUTES 연결 문제
