@@ -7,10 +7,10 @@ A new Flutter application for volunteers.
 
 1. basic timer page
 
-2. Main Page GridView
+2. Main Page GridView\n
 해야할일 : 다른 ROUTES 연결 문제
  
-3. Anouncment
+3. Anouncment\n
 해야할일 : 무한 스크롤 X -> SWIPER?
 
 4. Detail
