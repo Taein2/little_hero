@@ -8,8 +8,7 @@ A new Flutter application for volunteers.
 1. Init Timer Page  
 
 2. Main Page GridView  
-해야할일 : 다른 ROUTES 연결 문제
- 
+
 3. Anouncment  
 해야할일 : 무한 스크롤 X -> SWIPER?
 
