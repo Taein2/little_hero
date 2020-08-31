@@ -43,7 +43,6 @@ class gridMain extends StatelessWidget{
           Expanded(child:Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: GridView.builder(
-
                 itemCount: products.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -52,14 +51,13 @@ class gridMain extends StatelessWidget{
                   crossAxisSpacing: 20,),
                 itemBuilder: (context,index) => ItemCard(
                   product: products[index],
-                  press: ()=> Navigator.of(context).pushNamed('/noti'),
+                  press: ()=> Navigator.of(context).pushNamed(products[index].url),
             )),
           ))
         ],
       ),
     );
   }
-
 }
 
 class ItemCard extends StatelessWidget {
@@ -86,10 +84,10 @@ class ItemCard extends StatelessWidget {
 }
 
 class Product{
-  final String image, title;
+  final String image, title, url;
   final Color color;
   final id ;
-  Product( {this.id,this.image, this.title, this.color});
+  Product( {this.id,this.image,this.url, this.title, this.color});
 
 }
 
@@ -98,11 +96,13 @@ List<Product> products = [
     id:1,
     title:'모집 공고',
     color: Colors.black,
+      url: '/noti'
   ),
   Product(
     id:2,
     title: '즐겨 찾기',
     color: Colors.black,
+    url : '/favorite'
   ),
   Product(
     id:3,

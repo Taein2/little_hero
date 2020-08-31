@@ -1,36 +1,26 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
 // import 'package:sqflite/sqflite.dart';
 import 'dart:async' show Future, StreamController, StreamSink;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
-class Get {
-
-  final int count;
-  final String previous;
-  final String next;
-  final List<Noti> results;
-
-
-  Get({
-    this.count,
-    this.previous,
-    this.next,
-    this.results,
-  });
-
-  factory Get.fromJSON(Map<String, dynamic> json) {
-    var list = json['results'] as List;
-    List<Noti> notiList = list.map((i) => Noti.fromJSON(i)).toList();
-
-    return Get(
-      count: json['count'],
-      previous: json['previous'],
-      next: json['next'],
-      results: notiList,
+class BottomLoader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Center(
+        child: SizedBox(
+          width: 33,
+          height: 33,
+          child: CircularProgressIndicator(
+            strokeWidth: 1.5,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -80,10 +70,7 @@ class dropGet {
   });
 
   factory dropGet.fromJSON(Map<String, dynamic> json) {
-    return dropGet(
-        id: json['id'],
-        city: json['city']
-    );
+    return dropGet(id: json['id'], city: json['city']);
   }
 }
 
@@ -126,8 +113,7 @@ class noti extends StatefulWidget {
 }
 
 class _noti extends State<noti> {
-  StreamController<List<Noti>> _listNoti;
-  List<Get> _listGet =[];
+  List<Noti> _listGet = [];
 
   List<dropGet> _dropItem = [];
   List<dropGet2> _dropItem2 = [];
@@ -141,7 +127,6 @@ class _noti extends State<noti> {
   String _selectedValue4 = '';
 
   //search
-  int page_size = 1;
   String address_city = '';
   String address_gu = '';
   String recruitStatus = '';
@@ -150,26 +135,36 @@ class _noti extends State<noti> {
   String endDate = '';
   String searchData = '';
 
-  Future<List<Noti>> _fetchGets() async {
+  void _fetchGets() async {
     var get = await http.get(
-        'http://ec2-15-164-213-200.ap-northeast-2.compute.amazonaws.com:8000/api/posts/all?page_size=' + page_size.toString() + '&addressCity=' + address_city +
-            '&addressGu= ' + address_gu + '&recruitStatus=' + recruitStatus +
-            '&adultStatus=' + adultStatus + '&startDate=' + startDate +
-            '&endDate=' + endDate + '&search=' + searchData + '&like=');
+        'http://54.180.31.78:8000/api/posts/all?addressCity=' +
+            address_city +
+            '&addressGu= ' +
+            address_gu +
+            '&recruitStatus=' +
+            recruitStatus +
+            '&adultStatus=' +
+            adultStatus +
+            '&startDate=' +
+            startDate +
+            '&endDate=' +
+            endDate +
+            '&search=' +
+            searchData +
+            '&like=');
 
-
-    if (get.statusCode == 200) { //통신 성공
-      var r1 = json.decode(utf8.decode(get.bodyBytes));
-      Get r = new Get.fromJSON(r1);
-      _listGet.add(r);
-      return r.results;
-    }
+    final List<Noti> parsedGet1 = jsonDecode(utf8.decode(get.bodyBytes))
+        .map<Noti>((json) => Noti.fromJSON(json))
+        .toList();
+    setState(() {
+      _listGet.clear();
+      _listGet.addAll(parsedGet1);
+    });
   }
 
 
   void _dropGets() async {
-    var get = await http.get(
-        'http://ec2-15-164-213-200.ap-northeast-2.compute.amazonaws.com:8000/api/cities/list');
+    var get = await http.get('http://54.180.31.78:8000/api/cities/list');
 
     final List<dropGet> parsedGet1 = jsonDecode(utf8.decode(get.bodyBytes))
         .map<dropGet>((json) => dropGet.fromJSON(json))
@@ -182,8 +177,7 @@ class _noti extends State<noti> {
   }
 
   void _dropGets2() async {
-    var get = await http.get(
-        'http://ec2-15-164-213-200.ap-northeast-2.compute.amazonaws.com:8000/api/cities/detail');
+    var get = await http.get('http://54.180.31.78:8000/api/cities/detail');
     final List<dropGet2> parsedGet2 = jsonDecode(utf8.decode(get.bodyBytes))
         .map<dropGet2>((json) => dropGet2.fromJSON(json))
         .toList();
@@ -201,7 +195,7 @@ class _noti extends State<noti> {
 
   void _dropGets3() async {
     var get = await http.get(
-        'http://ec2-15-164-213-200.ap-northeast-2.compute.amazonaws.com:8000/api/posts/dropdown?kinds=%EB%8C%80%EC%83%81');
+        'http://54.180.31.78:8000/api/posts/dropdown?kinds=%EB%8C%80%EC%83%81');
     final List<dropGet3> parsedGet3 = jsonDecode(utf8.decode(get.bodyBytes))
         .map<dropGet3>((json) => dropGet3.fromJSON(json))
         .toList();
@@ -212,10 +206,9 @@ class _noti extends State<noti> {
     });
   }
 
-
   void _dropGets4() async {
     var get = await http.get(
-        'http://ec2-15-164-213-200.ap-northeast-2.compute.amazonaws.com:8000/api/posts/dropdown?kinds=%EC%83%81%ED%83%9C');
+        'http://54.180.31.78:8000/api/posts/dropdown?kinds=%EC%83%81%ED%83%9C');
     final List<dropGet3> parsedGet4 = jsonDecode(utf8.decode(get.bodyBytes))
         .map<dropGet3>((json) => dropGet3.fromJSON(json))
         .toList();
@@ -226,50 +219,22 @@ class _noti extends State<noti> {
     });
   }
 
-
   void initState() {
     super.initState();
-    _listNoti = new StreamController<List<Noti>>();
-    loadData();
+    _fetchGets();
     _dropGets(); //시
     _dropGets2(); //구
     _dropGets3(); //모집대상
     _dropGets4(); //모집상태
+
   }
 
-  void loadData() async {
-    _fetchGets().then((res) async {
-      _listNoti.add(res);
-      return res;
-    });
-  }
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  showSnack() {
-    return scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        content: Text('New content loaded'),
-      ),
-    );
-  }
-
-  Future <List<Noti>> refresh() async{
-    page_size++;
-    _fetchGets().then((res) async{
-      _listNoti.add(res);
-      showSnack();
-      return res;
-
-    });
-  }
 
   Widget build(BuildContext context) {
     final _searchData_T = TextEditingController(text: '');
-    final _screenSize = MediaQuery
-        .of(context)
-        .size;
+    final _screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.lightBlueAccent,
       appBar: AppBar(
@@ -284,270 +249,230 @@ class _noti extends State<noti> {
         ),
       ),
       body: Center(
-          child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text('모집 공고',
-                    style:Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  '모집 공고',
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ),
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: new DropdownButton(
-                                value: _selectedValue1,
-                                items: _dropItem.map((item) {
-                                  return new DropdownMenuItem<String>(
-                                    value: item.city,
-                                    child: new Text(
-                                      item.city,
-                                      style: TextStyle(color: Colors.black,
-                                          fontSize: 17),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _selectedValue1 = newValue;
-                                    _dropItem2_1.clear();
-                                    for (int i = 0; i < _dropItem2.length; i++) {
-                                      if (_selectedValue1 == _dropItem2[i].city) {
-                                        _dropItem2_1.add(_dropItem2[i]);
-                                        _selectedValue2 = _dropItem2_1[0].gu;
-                                      }
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                            children: <Widget>[
+            ),
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
                           Container(
                             height: 30,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10)),
-                              child: new DropdownButton(
-                                value: _selectedValue2,
-                                items: _dropItem2_1.map((item) {
-                                  return new DropdownMenuItem<String>(
-                                    value: item.gu,
-                                    child: Text(item.gu,
-                                      style: TextStyle(color: Colors.black,
-                                          fontSize: 17),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _selectedValue2 = newValue;
-                                  });
-                                },
-                              ),
-                          ),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: DropdownButton(
-                                value: _selectedValue3,
-                                items: _dropItem3.map((item) {
-                                  return new DropdownMenuItem<String>(
-                                    value: item.li,
-                                    child: Text(item.li,
-                                      style: TextStyle(color: Colors.black,
-                                          fontSize: 17),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _selectedValue3 = newValue;
-                                  });
-                                },
-                              ),
+                            child: new DropdownButton(
+                              value: _selectedValue1,
+                              items: _dropItem.map((item) {
+                                return new DropdownMenuItem<String>(
+                                  value: item.city,
+                                  child: new Text(
+                                    item.city,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 17),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedValue1 = newValue;
+                                  _dropItem2_1.clear();
+                                  for (int i = 0; i < _dropItem2.length; i++) {
+                                    if (_selectedValue1 == _dropItem2[i].city) {
+                                      _dropItem2_1.add(_dropItem2[i]);
+                                      _selectedValue2 = _dropItem2_1[0].gu;
+                                    }
+                                  }
+                                });
+                              },
                             ),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: DropdownButton(
-                                value: _selectedValue4,
-                                items: _dropItem4.map((item) {
-                                  return DropdownMenuItem(
-                                    value: item.li,
-                                    child: Text(item.li,
-                                      style: TextStyle(color: Colors.black,
-                                          fontSize: 17),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedValue4 = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Container(
-                          width: _screenSize.width * 0.8,
-                          height: _screenSize.height * 0.05,
-                          decoration: new BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.white,
                           ),
-                          child: TextFormField(
-                            decoration: new InputDecoration.collapsed(
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: new DropdownButton(
+                              value: _selectedValue2,
+                              items: _dropItem2_1.map((item) {
+                                return new DropdownMenuItem<String>(
+                                  value: item.gu,
+                                  child: Text(
+                                    item.gu,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 17),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedValue2 = newValue;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: DropdownButton(
+                              value: _selectedValue3,
+                              items: _dropItem3.map((item) {
+                                return new DropdownMenuItem<String>(
+                                  value: item.li,
+                                  child: Text(
+                                    item.li,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 17),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedValue3 = newValue;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: DropdownButton(
+                              value: _selectedValue4,
+                              items: _dropItem4.map((item) {
+                                return DropdownMenuItem(
+                                  value: item.li,
+                                  child: Text(
+                                    item.li,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 17),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedValue4 = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Container(
+                        width: _screenSize.width * 0.8,
+                        height: _screenSize.height * 0.05,
+                        decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          decoration: new InputDecoration.collapsed(
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              )
-                            ),
-                            controller: _searchData_T,
-                            style: TextStyle(
-                              color:Colors.black,
-                              fontSize: 18
-                            ),
-                          ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          )),
+                          controller: _searchData_T,
+                          style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () async {
-                            address_city = _selectedValue1;
-                            address_gu = _selectedValue2;
-                            if (_selectedValue3 == '성인') {
-                              adultStatus = 'true';
-                            }
-                            else if (_selectedValue3 == '청소년') {
-                              adultStatus = 'false';
-                            }
-                            else {
-                              adultStatus = '';
-                            }
-                            if (_selectedValue4 == '모집중') {
-                              recruitStatus = 'true';
-                            }
-                            else if (_selectedValue4 == '모집완료') {
-                              recruitStatus = 'false';
-                            }
-                            else {
-                              adultStatus = '';
-                            }
-                            if (_searchData_T.text != '') {
-                              searchData = _searchData_T.text.toString();
-                            } else {
-                              searchData = '';
-                            }
-                            page_size=1;
-                            _fetchGets();
-                            loadData();
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () async {
+                          address_city = _selectedValue1;
+                          address_gu = _selectedValue2;
+                          if (_selectedValue3 == '성인') {
+                            adultStatus = 'true';
+                          } else if (_selectedValue3 == '청소년') {
+                            adultStatus = 'false';
+                          } else {
+                            adultStatus = '';
+                          }
+                          if (_selectedValue4 == '모집중') {
+                            recruitStatus = 'true';
+                          } else if (_selectedValue4 == '모집완료') {
+                            recruitStatus = 'false';
+                          } else {
+                            recruitStatus = '';
+                          }
+                          if (_searchData_T.text != '') {
+                            searchData = _searchData_T.text.toString();
+                          } else {
+                            searchData = '';
+                          }
+                          _fetchGets();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    )),
-
-                child: new StreamBuilder<List<Noti>>(
-                  stream: _listNoti.stream,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return new Center(
-                        child: new CircularProgressIndicator(),
-                      );
-                    }
-                    else if (snapshot.hasError) {
-                      return new Text('Error : ${snapshot.error}');
-                    }
-                    else {      //snapshot.hasData
-                      return new Scrollbar(
-                        child: new RefreshIndicator(
-                          onRefresh: refresh,
-                          child: Stack(
-                            children: <Widget>[
-                             Container(
-                              width: _screenSize.width,
-                              height: _screenSize.height*0.6,
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) =>
-                                    Divider(
-                                      color: Colors.black,
-                                    ),
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  var items = snapshot.data[index];
-                                  return ListTile(
-                                          title: Text(items.title,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: new TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        subtitle: Text(items.address_city),
-                                        onTap: () {
-                                          return Navigator.of(context).pushNamed(
-                                              '/sub', arguments: items);
-                                        },
-                                  );
-                                },
-                              ),
-                            ),
-                            ],
-                          ),
+            ),
+            Container(
+              width: _screenSize.width,
+              height: _screenSize.height*0.71,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  )),
+              child: new ListView.builder(
+                  itemCount: _listGet.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return ListTile(
+                      title: Text(
+                        _listGet[i].title,
+                        overflow: TextOverflow.ellipsis,
+                        style: new TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              Spacer(),
-
-            ],
-          ),
+                      ),
+                      subtitle: Text(_listGet[i].address_city),
+                      onTap: () {
+                        return Navigator.of(context)
+                            .pushNamed('/sub', arguments: _listGet[i]);
+                      },
+                    );
+                  }),
+            ),
+            Spacer(),
+          ],
         ),
+      ),
     );
   }
 }

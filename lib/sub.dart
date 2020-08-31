@@ -1,9 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:little_hero/noti.dart';
+import 'package:little_hero/favorite.dart';
 import 'dart:async' show Future;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:little_hero/db.dart';
+
 
 class detailGet {
   final int id;
@@ -60,7 +63,7 @@ class _Sub extends State<sub> {
 
   void _detailGets() async {
     var get = await http.get(
-        'http://ec2-15-164-213-200.ap-northeast-2.compute.amazonaws.com:8000/api/posts/detail?registNo=' +
+        'http://54.180.31.78:8000/api/posts/detail?registNo=' +
             registNo +
             '&siteDomain=');
 
@@ -73,6 +76,7 @@ class _Sub extends State<sub> {
     });
   }
 
+
   void initState() {
     super.initState();
     _detailGets();
@@ -82,6 +86,7 @@ class _Sub extends State<sub> {
   String do_date_extra = '';    //봉사일시
   String domain = '';
   String address_remainder = '';
+  int regist_no = 0;
   Widget build(BuildContext context) {
     noti = ModalRoute.of(context).settings.arguments;
 
@@ -93,6 +98,20 @@ class _Sub extends State<sub> {
         do_date_extra = _detail[i].do_date_extra;
         domain = _detail[i].domain;
         address_remainder = _detail[i].address_remainder;
+        regist_no = _detail[i].regist_no;
+      }
+
+    }
+    bool state = false;
+
+    _btnClicked() {
+      if(state == false){
+        state = true;
+        DBHelper().insert(regist_no);
+      }
+      else if(state == true){
+        state = false;
+        DBHelper().delete(regist_no);
       }
     }
 
@@ -112,17 +131,15 @@ class _Sub extends State<sub> {
         actions: <Widget>[
           IconButton(
             icon: Icon(
-              Icons.favorite_border,
-              color: Colors.white,
-            ),
-            onPressed: null,
-          ),
-          IconButton(
-            icon: Icon(
               Icons.star_border,
               color: Colors.white,
             ),
-            onPressed: null,
+            onPressed: (){
+              setState(() {
+
+                _btnClicked();
+              });
+            },
           ),
           SizedBox(
             width: size.width * 0.02,
@@ -308,13 +325,15 @@ class _Sub extends State<sub> {
                     Row(
                       children: <Widget>[
                         Spacer(),
-                        Text(
+                        /*Text(
                           noti.start_date + ' ~ ' + noti.end_date,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                           ),
                         ),
+                        */
+                        /*
                         Spacer(flex: 3),
                         Text(
                           '모집중',
@@ -340,6 +359,7 @@ class _Sub extends State<sub> {
                             ),
                           ),
                         ),
+                        */
                         Spacer(),
                       ],
                     ),

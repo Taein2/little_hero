@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:little_hero/sub.dart';
 import 'package:little_hero/noti.dart';
 import 'package:little_hero/gridMain.dart';
+import 'package:little_hero/favorite.dart';
 import 'dart:async';
 
 void main() {
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         '/gridMain': (context) => new gridMain(),
         '/noti': (context) => new noti(),
         '/sub': (context) => new sub(),
+        '/favorite' : (context) => new favorite(),
       },
     );
   }
@@ -39,7 +41,7 @@ class _Routes extends State<routes> {
 
   void initState(){
     super.initState();
-    Timer(Duration(seconds: 1), () => Navigator.of(context).pushReplacementNamed('/gridMain'));
+    Timer(Duration(seconds: 2), () => Navigator.of(context).pushReplacementNamed('/gridMain'));
   }
 
   Widget build(BuildContext context) {
